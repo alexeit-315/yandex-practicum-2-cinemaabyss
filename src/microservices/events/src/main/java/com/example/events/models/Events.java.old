@@ -1,0 +1,42 @@
+package com.example.events.models;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
+public class Event {
+    private String id;
+    private String type;
+    private LocalDateTime timestamp;
+    private Object payload;
+}
+
+@Data
+public class MovieEvent {
+    private Integer movieId;
+    private String title;
+    private String action;
+    private Integer userId;
+    private Double rating;
+    private String[] genres;
+    private String description;
+}
+
+@Data
+public class UserEvent {
+    private Integer userId;
+    private String username;
+    private String email;
+    private String action;
+    private LocalDateTime timestamp;
+}
+
+@Data
+public class PaymentEvent {
+    private Integer paymentId;
+    private Integer userId;
+    private Double amount;
+    private String status;
+    private LocalDateTime timestamp;
+    private String methodType;
+}

@@ -1,0 +1,32 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /
+
+proxy:
+  services:
+    monolith:
+      base-url: http://monolith:8080/api
+    movies-service:
+      base-url: http://movies-service:8081/api
+    events-service:
+      base-url: http://events-service:8082/api
+
+feature-flags:
+  movies-service:
+    enabled: true
+    traffic-percentage: 50
+
+resilience:
+  retry:
+    max-attempts: 3
+    backoff-delay: 100
+
+logging:
+  level:
+    root: DEBUG
+    com.example.proxy: DEBUG
+    com.example.proxy.controllers: DEBUG
+    com.example.proxy.services: DEBUG
+  file:
+    name: C:/Tmp/proxy-service.log

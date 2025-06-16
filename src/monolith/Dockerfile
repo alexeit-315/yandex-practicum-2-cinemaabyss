@@ -3,13 +3,14 @@ FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY go.mod ./
+COPY go.mod /app/
+COPY go.sum /app/
 
 # Download all dependencies
 RUN go mod download
 
 # Copy the source code
-COPY . .
+COPY . /app/
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o monolith .

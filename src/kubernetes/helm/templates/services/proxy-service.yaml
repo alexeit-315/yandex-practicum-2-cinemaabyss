@@ -25,7 +25,45 @@ spec:
     spec:
       containers:
       - name: proxy-service
-        ..... тут
+        image: {{ .Values.proxyService.image.repository }}:{{ .Values.proxyService.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.proxyService.image.pullPolicy | default "Always" }}
+        ports:
+        - containerPort: {{ .Values.proxyService.service.targetPort | default 8000 }}
+        env:
+        - name: PORT
+          value: "{{ .Values.proxyService.service.targetPort | default 8000 }}"
+        - name: MONOLITH_URL
+          value: "http://monolith:{{ .Values.monolith.service.targetPort | default 8080 }}"
+        - name: MOVIES_SERVICE_URL
+          value: "http://movies-service:{{ .Values.moviesService.service.targetPort | default 8081 }}"
+        - name: EVENTS_SERVICE_URL
+          value: "http://events-service:{{ .Values.eventsService.service.targetPort | default 8082 }}"
+        - name: GRADUAL_MIGRATION
+          value: "{{ .Values.proxyService.gradualMigration | default "true" }}"
+        - name: MOVIES_MIGRATION_PERCENT
+          value: "{{ .Values.proxyService.moviesMigrationPercent | default 50 }}"
+        envFrom:
+        - configMapRef:
+            name: cinemaabyss-config
+        - secretRef:
+            name: cinemaabyss-secrets
+        resources:
+          {{- toYaml (.Values.proxyService.resources | default (dict "limits" (dict "cpu" "400m" "memory" "512Mi") "requests" (dict "cpu" "200m" "memory" "256Mi"))) | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.proxyService.service.targetPort | default 8000 }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.proxyService.service.targetPort | default 8000 }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerconfigjson
 ---
 apiVersion: v1
 kind: Service
@@ -38,5 +76,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   selector:
-    ... и тут
+    app: proxy-service
+  ports:
+  - port: {{ .Values.proxyService.service.port | default 8000 }}
+    targetPort: {{ .Values.proxyService.service.targetPort | default 8000 }}
+  type: {{ .Values.proxyService.service.type | default "LoadBalancer" }}
 {{- end }}

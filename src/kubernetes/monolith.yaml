@@ -22,7 +22,9 @@ spec:
     spec:
       containers:
       - name: monolith
-        image:  ghcr.io/db-exp/cinemaabysstest/monolith:latest
+#        image: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/monolith:sha-20225d1
+        image: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/monolith:latest
+#        image: ghcr.io/alexeit-315/monolith:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
