@@ -12,11 +12,6 @@ proxy:
     events-service:
       base-url: http://events-service:8082/api
 
-feature-flags:
-  movies-service:
-    enabled: true
-    traffic-percentage: 50
-
 resilience:
   retry:
     max-attempts: 3
@@ -24,7 +19,7 @@ resilience:
 
 logging:
   level:
-    root: DEBUG
+    root: INFO
     com.example.proxy: DEBUG
     com.example.proxy.controllers: DEBUG
     com.example.proxy.services: DEBUG

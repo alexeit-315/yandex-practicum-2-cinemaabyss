@@ -7,6 +7,9 @@ import com.example.proxy.models.Movie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Random;
@@ -21,45 +24,53 @@ public class RoutingService {
     private final Random random = new Random();
 
     public List<Movie> getAllMovies() {
-        if (shouldRouteToMicroservice()) {
-            log.info("Routing to movies microservice");
-            return moviesServiceClient.getAllMovies();
-        } else {
-            log.info("Routing to monolith");
-            return monolithClient.getAllMovies();
-        }
+        return routeRequest(
+                () -> moviesServiceClient.getAllMovies(),
+                () -> monolithClient.getAllMovies()
+        );
     }
 
     public Movie getMovieById(Integer id) {
-        if (shouldRouteToMicroservice()) {
-            log.info("Routing to movies microservice");
-            return moviesServiceClient.getMovieById(id);
-        } else {
-            log.info("Routing to monolith");
-            return monolithClient.getMovieById(id);
-        }
+        return routeRequest(
+                () -> moviesServiceClient.getMovieById(id),
+                () -> monolithClient.getMovieById(id)
+        );
     }
 
     public Movie createMovie(Movie movie) {
-        if (shouldRouteToMicroservice()) {
-            log.info("Routing to movies microservice");
-            return moviesServiceClient.createMovie(movie);
-        } else {
-            log.info("Routing to monolith");
-            return monolithClient.createMovie(movie);
-        }
+        return routeRequest(
+                () -> moviesServiceClient.createMovie(movie),
+                () -> monolithClient.createMovie(movie)
+        );
     }
 
-    private boolean shouldRouteToMicroservice() {
-        if (!featureFlagConfig.isEnabled()) {
-            return false;
+    private <T> T routeRequest(Supplier<T> microserviceCall, Supplier<T> monolithCall) {
+        // Сначала проверяем крайние случаи
+        if (featureFlagConfig.isFullyOnMonolith()) {
+            log.info("Routing 100% to monolith (enabled={}, percentage={})",
+                    featureFlagConfig.isEnabled(), featureFlagConfig.getTrafficPercentage());
+            return monolithCall.get();
         }
 
+        if (featureFlagConfig.isFullyOnMicroservice()) {
+            log.info("Routing 100% to microservice (enabled={}, percentage={})",
+                    featureFlagConfig.isEnabled(), featureFlagConfig.getTrafficPercentage());
+            return microserviceCall.get();
+        }
+
+        // Затем проверяем здоровье микросервиса
         if (!moviesServiceClient.isHealthy()) {
             log.warn("Movies service is unhealthy, falling back to monolith");
-            return false;
+            return monolithCall.get();
         }
 
-        return random.nextInt(100) < featureFlagConfig.getTrafficPercentage();
+        // Только если не крайние случаи - делаем процентное распределение
+        int percentage = featureFlagConfig.getTrafficPercentage();
+        boolean useMicroservice = random.nextInt(100) < percentage;
+
+        log.info("Routing decision: {}% to microservice (selected: {})",
+                percentage, useMicroservice ? "microservice" : "monolith");
+
+        return useMicroservice ? microserviceCall.get() : monolithCall.get();
     }
 }

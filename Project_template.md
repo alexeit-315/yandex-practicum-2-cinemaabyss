@@ -51,6 +51,7 @@ Proxy-сервис реализован с использованием Java 21 
 [Скриншот тестов postman (экран 2)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.2.gif)  
 [Скриншот тестов postman (экран 3)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.3.gif)  
 
+Протестировано перенаправление трафика с monolith на movies-service через изменение переменных окружения MOVIES_MIGRATION_PERCENT и GRADUAL_MIGRATION в файле docker-compose.yml
 
 ### 2. Kafka
  Вам как архитектуру нужно также проверить гипотезу насколько просто реализовать применение Kafka в данной архитектуре.
