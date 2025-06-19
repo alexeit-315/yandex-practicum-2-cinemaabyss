@@ -1,5 +1,6 @@
 package com.example.proxy;
 
+import com.example.proxy.filters.ResponseFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,5 +20,13 @@ public class ProxyApplication {
 				.setConnectTimeout(Duration.ofSeconds(5))
 				.setReadTimeout(Duration.ofSeconds(5))
 				.build();
+	}
+	@Bean
+	public FilterRegistrationBean<ResponseFilter> responseFilter() {
+		FilterRegistrationBean<ResponseFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new ResponseFilter());
+		registrationBean.addUrlPatterns("/api/movies");
+		registrationBean.setOrder(1); // Установите подходящий порядок фильтрации
+		return registrationBean;
 	}
 }
