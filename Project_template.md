@@ -387,6 +387,7 @@ https://cinemaabyss.example.com/api/movies
 kubectl delete all --all -n cinemaabyss
 kubectl delete namespace cinemaabyss
 ```
-Реализованы helm чарты для запуска приложения. Приложение успешно запущено   
+Реализованы helm чарты для запуска приложения. Приложение успешно запущено. Тесты проходят успешно, за исключением health теста Movies Microservice (согласно предупреждению Proxy в Kubernetes, Шаг 2, п.12)  
 [Скриншот развертывания helm](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.1_helm_deployment.gif)  
 [Скриншот обращения к movies](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот обращения к movies](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)
