@@ -1,7 +1,7 @@
 package com.example.proxy.filters;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
 public class CustomResponseWrapper extends HttpServletResponseWrapper {
@@ -18,6 +18,16 @@ public class CustomResponseWrapper extends HttpServletResponseWrapper {
     }
 
     @Override
+
+
+
+
+
+
+
+
+
+
     public void sendError(int sc) throws IOException {
         this.status = sc;
         super.sendError(sc);
