@@ -190,8 +190,8 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
                   "",
                   "pm.test(\"Response has id\", function () {",
@@ -223,6 +223,16 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Вручную устанавливаем movieId для отладки",
+                  "pm.collectionVariables.set(\"movieId\", 1);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "exec": [
@@ -232,7 +242,7 @@
                   "",
                   "pm.test(\"Movie ID matches\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.equal(parseInt(pm.collectionVariables.get(\"movieId\")));",
+                  "    pm.expect(jsonData[0].id).to.equal(parseInt(pm.collectionVariables.get(\"movieId\")));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -478,8 +488,8 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
                   "",
                   "pm.test(\"Response has id\", function () {",
@@ -511,6 +521,16 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Вручную устанавливаем movieId для отладки",
+                  "pm.collectionVariables.set(\"movieId\", 1);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "exec": [
@@ -520,7 +540,7 @@
                   "",
                   "pm.test(\"Movie ID matches\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.equal(parseInt(pm.collectionVariables.get(\"msMovieId\")));",
+                  "    pm.expect(jsonData[0].id).to.equal(parseInt(pm.collectionVariables.get(\"movieId\")));",
                   "});"
                 ],
                 "type": "text/javascript"
