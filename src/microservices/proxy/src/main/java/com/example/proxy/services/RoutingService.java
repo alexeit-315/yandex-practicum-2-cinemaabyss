@@ -38,14 +38,10 @@ public class RoutingService {
     }
 
     public Movie createMovie(Movie movie) {
-        Movie result = routeRequest(
+        return routeRequest(
                 () -> moviesServiceClient.createMovie(movie),
                 () -> monolithClient.createMovie(movie)
         );
-
-        // Добавляем лог для отладки
-        log.info("Created movie with ID: {}", result.getId());
-        return result;
     }
 
     private <T> T routeRequest(Supplier<T> microserviceCall, Supplier<T> monolithCall) {

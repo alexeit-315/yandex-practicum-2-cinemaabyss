@@ -67,13 +67,7 @@ public class ProxyController {
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
         log.debug("Entering createMovie");
         try {
-            Movie createdMovie = routingService.createMovie(movie);
-            log.info("=============================");
-            log.info("CreateMovie: ", createdMovie);
-            log.info("=============================");
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)  // Явно указываем статус 201
-                    .body(createdMovie);
+            return ResponseEntity.ok(routingService.createMovie(movie));
         } finally {
             log.debug("Exiting createMovie");
         }
