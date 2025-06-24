@@ -16,6 +16,10 @@ import java.net.URISyntaxException;
 import java.io.IOException;
 import java.util.List;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+
 @RestController
 @RequestMapping("/") // Базовый путь для всех методов контроллера
 @RequiredArgsConstructor
@@ -67,7 +71,8 @@ public class ProxyController {
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
         log.debug("Entering createMovie");
         try {
-            return ResponseEntity.ok(routingService.createMovie(movie));
+            return ResponseEntity.status(HttpStatus.CREATED).body(routingService.createMovie(movie));
+//            return ResponseEntity.ok(routingService.createMovie(movie));
         } finally {
             log.debug("Exiting createMovie");
         }
@@ -80,7 +85,9 @@ public class ProxyController {
             throws URISyntaxException, IOException {
 
         log.debug("Received request: {} {}", request.getMethod(), request.getRequestURI());
-
+        log.debug("Incoming request headers: {}", Collections.list(request.getHeaderNames()).stream()
+                .map(name -> name + ": " + request.getHeader(name))
+                .collect(Collectors.joining(", ")));
         // Удаляем /api из пути, так как монолит уже ожидает его
         String requestUrl = request.getRequestURI().replaceFirst("^/api", "");
         String queryString = request.getQueryString();
@@ -93,7 +100,7 @@ public class ProxyController {
         request.getHeaderNames().asIterator()
                 .forEachRemaining(headerName ->
                         headers.add(headerName, request.getHeader(headerName)));
-
+        log.debug("Outgoing request headers: {}", headers);
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
 
         Object body = null;
@@ -112,6 +119,8 @@ public class ProxyController {
                 requestEntity,
                 byte[].class
         );
+
+        log.debug("Received response headers: {}", response.getHeaders());
 
         HttpHeaders responseHeaders = new HttpHeaders();
         response.getHeaders().forEach((key, values) ->

@@ -32,7 +32,10 @@ public class MonolithClient {
     }
 
     public Movie createMovie(Movie movie) {
-        return restTemplate.postForObject(
+        log.debug("Creating movie in monolith: {}", movie);
+        Movie result = restTemplate.postForObject(
                 moviesEndpoint, movie, Movie.class);
+        log.debug("Created movie in monolith: {}", result);
+        return result;
     }
 }

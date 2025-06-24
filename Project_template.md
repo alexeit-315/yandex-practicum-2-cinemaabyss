@@ -285,7 +285,7 @@ cat .docker/config.json | base64
 
   10. Вызовите
   ```bash
-  minikube tunnel
+[=]
   ```
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
