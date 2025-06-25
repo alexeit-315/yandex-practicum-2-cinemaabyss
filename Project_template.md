@@ -301,11 +301,11 @@ cat .docker/config.json | base64
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
-Доработаны event-service.yaml и proxy-service.yaml. Приложение запущено в Kubernetes   
+Доработаны event-service.yaml и proxy-service.yaml. Приложение запущено в Kubernetes. Успешно пройдены тесты.   
 [Скриншот обращения к movies](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test2.1_API_movies.gif)  
 [Скриншот event-service log](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test2.2_events-service_log.gif)  
-[Скриншот запуска тестов](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test2.3_tests_output.gif)  
-
+[Скриншот запуска тестов 1](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)
 
 # Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -387,6 +387,7 @@ https://cinemaabyss.example.com/api/movies
 kubectl delete all --all -n cinemaabyss
 kubectl delete namespace cinemaabyss
 ```
-Реализованы helm чарты для запуска приложения. Приложение успешно запущено   
+Реализованы helm чарты для запуска приложения. Приложение успешно запущено. Успешно пройдены тесты.   
 [Скриншот развертывания helm](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.1_helm_deployment.gif)  
-[Скриншот обращения к movies](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот запуска тестов 1](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)
