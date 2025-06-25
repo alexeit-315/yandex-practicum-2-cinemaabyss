@@ -23,6 +23,10 @@ public class RoutingService {
     private final MoviesServiceClient moviesServiceClient;
     private final Random random = new Random();
 
+    public MoviesServiceClient getMoviesServiceClient() {
+        return this.moviesServiceClient;
+    }
+
     public List<Movie> getAllMovies() {
         return routeRequest(
                 () -> moviesServiceClient.getAllMovies(),

@@ -46,6 +46,22 @@ public class ProxyController {
         }
     }
 
+    @GetMapping("/api/movies/health")
+    public ResponseEntity<String> moviesHealthCheck() {
+        log.debug("Checking movies service health");
+        try {
+            boolean isHealthy = routingService.getMoviesServiceClient().isHealthy();
+            String jsonResponse = String.format("{\"status\":%b}", isHealthy);  // Формируем JSON вручную
+
+            return isHealthy
+                    ? ResponseEntity.ok(jsonResponse)
+                    : ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(jsonResponse);
+        } catch (Exception e) {
+            log.error("Health check failed", e);
+            return ResponseEntity.internalServerError().body("{\"status\":false}");
+        }
+    }
+
     @GetMapping("/api/movies")
     public ResponseEntity<List<Movie>> getAllMovies() {
         log.info("Info message: Entering getAllMovies");
