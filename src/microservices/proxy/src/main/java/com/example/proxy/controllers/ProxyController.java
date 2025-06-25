@@ -57,7 +57,7 @@ public class ProxyController {
         }
     }
 
-    @GetMapping("/api/movies/{id}")
+    @GetMapping(value = "/api/movies", params = "id")
     public ResponseEntity<Movie> getMovieById(@PathVariable Integer id) {
         log.debug("Entering getMovieById");
         try {
