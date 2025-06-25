@@ -20,8 +20,8 @@ resilience:
 logging:
   level:
     root: INFO
-    com.example.proxy: DEBUG
-    com.example.proxy.controllers: DEBUG
+    com.example.proxy: INFO
+    com.example.proxy.controllers: INFO
     com.example.proxy.services: DEBUG
   file:
     name: C:/Tmp/proxy-service.log
