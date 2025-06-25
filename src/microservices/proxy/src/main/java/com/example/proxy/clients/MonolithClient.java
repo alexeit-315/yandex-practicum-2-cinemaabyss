@@ -28,7 +28,7 @@ public class MonolithClient {
 
     public Movie getMovieById(Integer id) {
         return restTemplate.getForObject(
-                moviesEndpoint + "/" + id, Movie.class);
+                moviesEndpoint + "?id=" + id, Movie.class);
     }
 
     public Movie createMovie(Movie movie) {
