@@ -20,7 +20,3 @@ data:
   # Strangler Fig configuration
   GRADUAL_MIGRATION: {{ .Values.proxyService.gradualMigration | quote }}
   MOVIES_MIGRATION_PERCENT: {{ .Values.proxyService.moviesMigrationPercent | quote }}
-
-  # Настройки для FeatureFlagConfig
-  feature-flags.movies-service.enabled: {{ .Values.proxyService.env.FEATURE_FLAGS_MOVIES_SERVICE_ENABLED | quote }}
-  feature-flags.movies-service.migration-percent: {{ .Values.proxyService.env.FEATURE_FLAGS_MOVIES_SERVICE_MIGRATION_PERCENT | quote }}

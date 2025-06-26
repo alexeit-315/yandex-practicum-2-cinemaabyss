@@ -22,6 +22,6 @@ logging:
     root: INFO
     com.example.proxy: INFO
     com.example.proxy.controllers: INFO
-    com.example.proxy.services: DEBUG
+    com.example.proxy.services: INFO
   file:
     name: C:/Tmp/proxy-service.log
