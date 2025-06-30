@@ -38,10 +38,14 @@ spec:
           value: "http://movies-service:{{ .Values.moviesService.service.targetPort | default 8081 }}"
         - name: EVENTS_SERVICE_URL
           value: "http://events-service:{{ .Values.eventsService.service.targetPort | default 8082 }}"
-#        - name: GRADUAL_MIGRATION
-#          value: "{{ .Values.proxyService.gradualMigration | default "true" }}"
-#        - name: MOVIES_MIGRATION_PERCENT
-#          value: "{{ .Values.proxyService.moviesMigrationPercent | default 50 }}"
+        - name: GRADUAL_MIGRATION
+          value: "{{ .Values.proxyService.gradualMigration | default "true" }}"
+        - name: MOVIES_MIGRATION_PERCENT
+          value: "{{ .Values.proxyService.moviesMigrationPercent | default 50 }}"
+        - name: FEATURE_FLAGS_MOVIES_SERVICE_ENABLED
+          value: "{{ .Values.proxyService.env.FEATURE_FLAGS_MOVIES_SERVICE_ENABLED }}"
+        - name: FEATURE_FLAGS_MOVIES_SERVICE_MIGRATION_PERCENT
+          value: "{{ .Values.proxyService.env.FEATURE_FLAGS_MOVIES_SERVICE_MIGRATION_PERCENT }}"
         envFrom:
         - configMapRef:
             name: cinemaabyss-config

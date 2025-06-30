@@ -69,8 +69,8 @@ proxyService:
     targetPort: 8000
     type: ClusterIP
   env:
-    MOVIES_MIGRATION_PERCENT: "100"
-    GRADUAL_MIGRATION: "true"
+    FEATURE_FLAGS_MOVIES_SERVICE_MIGRATION_PERCENT: "100"
+    FEATURE_FLAGS_MOVIES_SERVICE_ENABLED: "true"
 
 # Movies service configuration
 moviesService:

@@ -68,8 +68,6 @@ proxyService:
     port: 80
     targetPort: 8000
     type: ClusterIP
-  gradualMigration: "true"
-  moviesMigrationPercent: "100"
 #  env:
 #    MOVIES_MIGRATION_PERCENT: "100"
 #    GRADUAL_MIGRATION: "true"
@@ -201,4 +199,4 @@ ingress:
 config:
 # Strangler Fig configuration
   gradualMigration: "true"
-  moviesMigrationPercent: "70"
+  moviesMigrationPercent: "100"

@@ -1,6 +1,7 @@
 package com.example.proxy.config;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Data
+@Slf4j
 @Configuration
 @ConfigurationProperties(prefix = "feature-flags.movies-service")
 public class FeatureFlagConfig {
@@ -17,8 +19,9 @@ public class FeatureFlagConfig {
     @Value("${GRADUAL_MIGRATION:false}")
     private boolean enabled;
 
-    // Обновляем геттер, чтобы учитывать переменную окружения
+    // Переменная окружения
     public int getTrafficPercentage() {
+            log.info("Info message: TrafficPercentage -  {}", migrationPercent);
             return migrationPercent;
     }
 
@@ -31,6 +34,7 @@ public class FeatureFlagConfig {
     }
 
     public boolean isEnabled() {
+        log.info("Info message:  -  {}", enabled);
         return enabled;
     }
 }
