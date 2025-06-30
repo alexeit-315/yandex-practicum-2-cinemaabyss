@@ -20,8 +20,10 @@ resilience:
 logging:
   level:
     root: INFO
+    org.springframework: WARN
     com.example.proxy: INFO
     com.example.proxy.controllers: INFO
     com.example.proxy.services: INFO
+    com.example.proxy.clients: INFO
   file:
     name: C:/Tmp/proxy-service.log
