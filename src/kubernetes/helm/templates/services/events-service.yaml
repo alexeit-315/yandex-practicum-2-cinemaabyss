@@ -25,7 +25,41 @@ spec:
     spec:
       containers:
       - name: events-service
-       .... тут
+        image: {{ .Values.eventsService.image.repository }}:{{ .Values.eventsService.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.eventsService.image.pullPolicy | default "Always" }}
+        ports:
+        - containerPort: {{ .Values.eventsService.service.targetPort | default 8082 }}
+        env:
+        - name: PORT
+          value: "{{ .Values.eventsService.service.targetPort | default 8082 }}"
+        - name: KAFKA_BROKERS
+          value: "{{ .Values.kafka.service.name | default "cinemaabyss-kafka" }}:{{ .Values.kafka.service.port | default 9092 }}"
+        - name: KAFKA_TOPICS
+          value: {{ .Values.eventsService.kafka.topics | default "movie-events,user-events,payment-events" | quote }}
+        - name: KAFKA_GROUP_ID
+          value: {{ .Values.eventsService.kafka.groupId | default "events-service-group" | quote }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.global.configMap | default "cinemaabyss-config" }}
+        - secretRef:
+            name: {{ .Values.global.secret | default "cinemaabyss-secrets" }}
+        resources:
+          {{- toYaml .Values.eventsService.resources | default (dict "limits" (dict "cpu" "300m" "memory" "256Mi") "requests" (dict "cpu" "100m" "memory" "128Mi")) | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.eventsService.readinessProbe.path | default "/api/events/health" }}
+            port: {{ .Values.eventsService.service.targetPort | default 8082 }}
+          initialDelaySeconds: {{ .Values.eventsService.readinessProbe.initialDelaySeconds | default 30 }}
+          periodSeconds: {{ .Values.eventsService.readinessProbe.periodSeconds | default 10 }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.eventsService.livenessProbe.path | default "/api/events/health" }}
+            port: {{ .Values.eventsService.service.targetPort | default 8082 }}
+          initialDelaySeconds: {{ .Values.eventsService.livenessProbe.initialDelaySeconds | default 60 }}
+          periodSeconds: {{ .Values.eventsService.livenessProbe.periodSeconds | default 30 }}
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: {{ .Values.global.imagePullSecret | default "dockerconfigjson" }}
 ---
 apiVersion: v1
 kind: Service
@@ -37,5 +71,10 @@ metadata:
     app.kubernetes.io/name: {{ include "cinemaabyss.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
- ........ и тут
+  selector:
+    app: events-service
+  ports:
+  - port: {{ .Values.eventsService.service.port | default 8082 }}
+    targetPort: {{ .Values.eventsService.service.targetPort | default 8082 }}
+  type: {{ .Values.eventsService.service.type | default "ClusterIP" }}
 {{- end }}

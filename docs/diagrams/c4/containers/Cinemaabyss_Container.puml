@@ -1,0 +1,99 @@
+@startuml Kinobezdna To-Be Architecture (C4 Container)
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "User of the system")
+
+' === System ===
+System_Boundary(kinobezdna, "Кинобездна") {
+    Container(web_app, "Web Application", "Angular/React", "Web application for browser")
+    Container(mobile_app, "Mobile App", "Android/iOS", "Mobile application for smartphone")
+    Container(smarttv_app, "Smart TV Application", "Angular/React", "Built-in application for smart TV")
+
+    ' === API Layer ===
+    Container(api_gateway, "API Gateway", "Spring Cloud Gateway", "Entry point for all client requests, routes to microservices, TLS termination, rate limiting")
+    Container(bff_mobile, "Mobile BFF", "Node.js", "Backend-for-Frontend optimized for mobile")
+    Container(bff_web, "Web BFF", "Node.js", "Backend-for-Frontend for web")
+    Container(bff_tv, "TV BFF", "Node.js", "Backend-for-Frontend for TV devices")
+
+    ' === Основные сервисы ===
+    Container(auth_service, "Auth Service", "Spring Boot", "OAuth2 authentication")
+    Container(user_service, "User Profile Service", "Spring Boot", "Profiles, preferences")
+    Container(content_service, "Content Service", "Spring Boot", "Movie storage, access to external online cinemas")
+    Container(metadata_service, "Movies Service", "Spring Boot", "Movie catalog, metadata, search")
+    Container(payment_service, "Payment Service", "Spring Boot", "Handles payments and billing")
+    Container(rec_service, "Recommendation Service", "Python/Flask", "ML recommendations")
+
+    ' === Инфраструктурные сервисы ===
+    Container(analytics_service, "Analytics Service", "Spring Boot", "Collecting metrics")
+    Container(notify_service, "Notification Service", "Spring Boot", "Email/SMS/Push notification")
+    Container(logging_service, "Logging Service", "Spring Boot", "Handles log messages")
+
+    ' === Хранилища ===
+    ContainerDb(user_db, "User PostgreSQL", "PostgreSQL", "Stores credentials, user profiles, preferences")
+    ContainerDb(content_db, "Content PostgreSQL", "PostgreSQL", "Local movie storage")
+    ContainerDb(metadata_db, "Metadata PostgreSQL", "PostgreSQL", "Metadata")
+    ContainerDb(payment_db, "Payment PostgreSQL", "PostgreSQL", "Bills, payments")
+    ContainerDb(analytics_db, "Time Series Database", "OpenTSDB", "Time series of metrics")
+    ContainerQueue(kafka, "Kafka", "Apache Kafka", "Message queue")
+}
+' === User interactions ===
+Rel(user, web_app, "Uses", "")
+Rel(user, mobile_app, "Uses", "")
+Rel(user, smarttv_app, "Uses", "")
+
+' === Client to Backend ===
+Rel(web_app, bff_web, "API calls", "GraphQL over HTTPS")
+Rel(mobile_app, bff_mobile, "API calls", "REST/HTTPS")
+Rel(smarttv_app, bff_tv, "API calls", "REST/HTTPS")
+
+' === API Gateway Routing ===
+Rel(bff_web, api_gateway, "Proxies requests", "HTTP")
+Rel(bff_mobile, api_gateway, "Proxies requests", "HTTP")
+Rel(bff_tv, api_gateway, "Proxies requests", "HTTP")
+
+' === Pub API ===
+Rel(api_gateway, auth_service, "Forwards requests", "REST/HTTPS")
+Rel(api_gateway, user_service, "Forwards requests", "REST/HTTPS")
+Rel(api_gateway, content_service, "Forwards requests", "REST/HTTPS")
+Rel(api_gateway, metadata_service, "Forwards requests", "REST/HTTPS")
+Rel(api_gateway, payment_service, "Forwards requests", "REST/HTTPS")
+Rel(api_gateway, rec_service, "Forwards requests", "REST/HTTPS")
+
+' === Data Stores ===
+Rel(auth_service, user_db, "Reads/Writes", "JDBC")
+Rel(user_service, user_db, "Reads/Writes", "JDBC")
+Rel(metadata_service, metadata_db, "Reads/Writes", "JDBC")
+Rel(content_service, content_db, "Reads/Writes", "JDBC")
+Rel(payment_service, payment_db, "Reads/Writes", "JDBC")
+Rel(analytics_service, analytics_db, "Reads/Writes", "TSL")
+
+' === Event-Driven Architecture ===
+Rel(analytics_service, kafka, "Pub/Sub", "Kafka Protocol")
+Rel(user_service, kafka, "Pub/Sub", "Kafka Protocol")
+Rel(payment_service, kafka, "Pub/Sub", "Kafka Protocol")
+Rel(rec_service, kafka, "Pub", "Kafka Protocol")
+Rel(notify_service, kafka, "Pub/Sub", "Kafka Protocol")
+Rel(logging_service, kafka, "Sub", "Kafka Protocol")
+Rel(notify_service, user, "Sends notification", "Email/SMS/Push")
+
+' === External Systems ===
+System_Ext(bank, "Bank System", "External bank system for processing payments")
+System_Ext(ml_rec, "Recommendation system", "External recommendation system")
+System_Ext(ext_cinema, "Online Cinema", "External Online Cinema")
+
+Rel(content_service, ext_cinema, "Gets video stream", "HTTPS")
+Rel(payment_service, bank, "Process payments", "HTTPS")
+Rel(rec_service, ml_rec, "Batch predictions", "gRPC")
+
+' === Легенда ===
+legend right
+  **Техстек:**
+  - Языки: Java 17 (Spring Boot 3), Python
+  - БД: PostgreSQL, ClickHouse
+  - Брокеры: Kafka
+  - Инфраструктура: K8s + Istio
+endlegend
+@enduml

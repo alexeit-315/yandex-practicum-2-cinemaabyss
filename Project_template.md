@@ -3,9 +3,9 @@
 # Задание 1
 
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
-Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
+Результат представьте в виде контейнерной диаграммы в нотации С4.  
+
+[Спроектирована контейнерная диаграмма архитектуру КиноБездны в нотации С4](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/diagrams/c4/containers/Cinemaabyss_Container.puml)
 
 # Задание 2
 
@@ -46,6 +46,12 @@
    ```
 - Протестируйте постепенный переход, изменив переменную окружения MOVIES_MIGRATION_PERCENT в файле docker-compose.yml.
 
+Proxy-сервис реализован с использованием Java 21 / Boot Spring 3.5.0 / Gradle 8. Успешно пройдены postman тесты.  
+[Скриншот тестов postman (экран 1)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.1.gif)  
+[Скриншот тестов postman (экран 2)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.2.gif)  
+[Скриншот тестов postman (экран 3)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.3.gif)  
+
+Протестировано перенаправление трафика с monolith на movies-service через изменение переменных окружения MOVIES_MIGRATION_PERCENT и GRADUAL_MIGRATION в файле docker-compose.yml
 
 ### 2. Kafka
  Вам как архитектуру нужно также проверить гипотезу насколько просто реализовать применение Kafka в данной архитектуре.
@@ -58,6 +64,17 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka из UI http://localhost:8090 
+
+Events-сервис реализован с использованием Java 21 / Boot Spring 3.5.0 / Gradle 8. Успешно пройдены postman тесты.  
+[Скриншот тестов postman (экран 1)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.1.gif)  
+[Скриншот тестов postman (экран 2)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.2.gif)  
+[Скриншот тестов postman (экран 3)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test1.3.gif)
+
+Состояние топиков Kafka из UI  
+[Скриншот топиков Kafka](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test2.1_Kafka_topics.gif)  
+[Скриншот топика movie-events](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test2.2_Kafka_topics.gif)  
+[Скриншот топика payment-events](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test2.3_Kafka_topics.gif)  
+[Скриншот топика user-events](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_2_test2.4_Kafka_topics.gif)  
 
 # Задание 3
 
@@ -108,6 +125,15 @@ jobs:
 ```
 Как только сборка отработает и в github registry появятся ваши образы, можно переходить к блоку настройки Kubernetes
 Успешным результатом данного шага является "зеленая" сборка и "зеленые" тесты
+
+Настроены workflows. При коммите запускаются и успешно отрабатывают api-tests   
+[Скриншот workflow github](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.1_build_and_API_test.gif)  
+[Скриншот отработки тестов (экран 1)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.2_API_test.gif)  
+[Скриншот отработки тестов (экран 2)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.3_API_test.gif)  
+[Скриншот отработки тестов (экран 3)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.4_API_test.gif)  
+[Скриншот отработки тестов (экран 4)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.5_API_test.gif)  
+[Скриншот отработки тестов (экран 5)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.6_API_test.gif)  
+[Скриншот отработки тестов (экран 6)](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test1.7_API_test.gif)   
 
 
 ### Proxy в Kubernetes
@@ -259,7 +285,7 @@ cat .docker/config.json | base64
 
   10. Вызовите
   ```bash
-  minikube tunnel
+[=]
   ```
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
@@ -275,6 +301,11 @@ cat .docker/config.json | base64
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+Доработаны event-service.yaml и proxy-service.yaml. Приложение запущено в Kubernetes. Успешно пройдены тесты.   
+[Скриншот обращения к movies](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test2.1_API_movies.gif)  
+[Скриншот event-service log](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_3_test2.2_events-service_log.gif)  
+[Скриншот запуска тестов 1](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)
 
 # Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -356,3 +387,8 @@ https://cinemaabyss.example.com/api/movies
 kubectl delete all --all -n cinemaabyss
 kubectl delete namespace cinemaabyss
 ```
+Реализованы helm чарты для запуска приложения. Приложение успешно запущено. Успешно пройдены тесты.   
+[Скриншот развертывания helm](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.1_helm_deployment.gif)  
+[Скриншот запуска тестов 1](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
+[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)  
+Протестировано перенаправление трафика с monolith на movies-service через изменение переменных окружения gradualMigration и moviesMigrationPercent в файле values.yaml

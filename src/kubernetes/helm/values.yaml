@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewogICAgICAgICAgICAgICAgICAiYXV0aCI6ICJZV3hsZUdWcGRDMHpNVFU2WjJod1gyVmlkbWxITjB4M1VtTTBRVkkwVnpsT1JGUmlXak5RYTBJMGIwZHBUek0zUVZaRWFnPT0iCiAgICAgICAgICAgICAgICB9Cgl9LAoJImNyZWRzU3RvcmUiOiAiZGVza3RvcCIsCgkiY3VycmVudENvbnRleHQiOiAiZGVza3RvcC1saW51eCIKfQ==
 # Database configuration
 database:
   host: postgres
@@ -33,7 +33,7 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/monolith
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -53,7 +53,7 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/proxy-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -68,12 +68,17 @@ proxyService:
     port: 80
     targetPort: 8000
     type: ClusterIP
+#  gradualMigration: "true"
+#  moviesMigrationPercent: "100"
+#  env:
+#    MOVIES_MIGRATION_PERCENT: "100"
+#    GRADUAL_MIGRATION: "true"
 
 # Movies service configuration
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/movies-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -93,10 +98,21 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/alexeit-315/yandex-practicum-2-cinemaabyss/events-service
     tag: latest
     pullPolicy: Always
   replicas: 1
+  kafka:
+    topics: "movie-events,user-events,payment-events"
+    groupId: "events-service-group"
+  readinessProbe:
+    path: /api/events/health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  livenessProbe:
+    path: /api/events/health
+    initialDelaySeconds: 60
+    periodSeconds: 30
   resources:
     limits:
       cpu: 300m
@@ -138,6 +154,9 @@ kafka:
     - name: payment-events
       partitions: 1
       replicationFactor: 1
+  service:
+    name: cinemaabyss-kafka
+    port: 9092
 
 # Zookeeper configuration
 zookeeper:
@@ -180,6 +199,6 @@ ingress:
 
 # Application configuration
 config:
-  # Strangler Fig configuration
+# Strangler Fig configuration
   gradualMigration: "true"
   moviesMigrationPercent: "100"

@@ -1,0 +1,29 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /
+
+proxy:
+  services:
+    monolith:
+      base-url: http://monolith:8080/api
+    movies-service:
+      base-url: http://movies-service:8081/api
+    events-service:
+      base-url: http://events-service:8082/api
+
+resilience:
+  retry:
+    max-attempts: 3
+    backoff-delay: 100
+
+logging:
+  level:
+    root: INFO
+    org.springframework: WARN
+    com.example.proxy: INFO
+    com.example.proxy.controllers: INFO
+    com.example.proxy.services: INFO
+    com.example.proxy.clients: INFO
+  file:
+    name: C:/Tmp/proxy-service.log

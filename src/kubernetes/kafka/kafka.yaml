@@ -88,7 +88,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka
+  name: cinemaabyss-kafka
   namespace: cinemaabyss
   labels:
     app: kafka
@@ -117,7 +117,7 @@ metadata:
   name: kafka
   namespace: cinemaabyss
 spec:
-  serviceName: kafka
+  serviceName: cinemaabyss-kafka
   replicas: 1
   selector:
     matchLabels:
@@ -142,9 +142,15 @@ spec:
             cpu: "1000m"
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: PLAINTEXT://kafka:9092
+          value: PLAINTEXT://cinemaabyss-kafka:9092
+#          value: PLAINTEXT://kafka:9092
+# Добавлено
         - name: KAFKA_LISTENERS
           value: PLAINTEXT://0.0.0.0:9092
+#          value: PLAINTEXT://0.0.0.0:9092
+# Добавлено
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: PLAINTEXT
         - name: KAFKA_PORT
           value: "9092"
         - name: KAFKA_ZOOKEEPER_CONNECT
