@@ -390,5 +390,5 @@ kubectl delete namespace cinemaabyss
 Реализованы helm чарты для запуска приложения. Приложение успешно запущено. Успешно пройдены тесты.   
 [Скриншот развертывания helm](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.1_helm_deployment.gif)  
 [Скриншот запуска тестов 1](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.2_API_movies.gif)  
-[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)
-Протестировано перенаправление трафика с monolith на movies-service через изменение переменных окружения MOVIES_MIGRATION_PERCENT и GRADUAL_MIGRATION в файле values.yaml
+[Скриншот запуска тестов 2](https://github.com/alexeit-315/yandex-practicum-2-cinemaabyss/blob/cinema/docs/screenshots/Task_4_test1.3_API_movies.gif)  
+Протестировано перенаправление трафика с monolith на movies-service через изменение переменных окружения gradualMigration и moviesMigrationPercent в файле values.yaml
